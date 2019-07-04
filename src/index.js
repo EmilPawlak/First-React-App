@@ -69,7 +69,7 @@ class Button extends React.Component {
   render() {
     return (
       <div>
-        <p>Możesz kliknąć przyciski by podnieść lub obniżyć numer!</p>
+        <p>Możesz kliknąć przyciski by podnieść lub obniżyć numer!!!</p>
         <button onClick={this.increment}>+</button>
         <span> {this.state.display} </span>
         <button onClick={this.decrement}>-</button>
@@ -92,7 +92,7 @@ function List(props) {
 }
 
 // Form
- 
+
 
 // Wyswietlanie
 function Body() {
