@@ -69,7 +69,7 @@ class Button extends React.Component {
   render() {
     return (
       <div>
-        <p>Możesz kliknąć przyciski by podnieść lub obniżyć numer!!!</p>
+        <p>Możesz kliknąć przyciski by podnieść lub obniżyć numer!</p>
         <button onClick={this.increment}>+</button>
         <span> {this.state.display} </span>
         <button onClick={this.decrement}>-</button>
@@ -80,7 +80,7 @@ class Button extends React.Component {
 
 // List i Key
 function List(props) {
-  const numbers = ["Pierwszy", "Drugi", "trzeci", "Czwarty", "Piąty"];
+  const numbers = ["Pierwszy", "Drugi", "Trzeci", "Czwarty", "Piąty"];
   const listItems = numbers.map((number) =>
     <li key={number.toString()}>
       {number}
@@ -90,9 +90,113 @@ function List(props) {
     <ol>{listItems}</ol>
   );
 }
+// Conditional Rendering
+function Toggle(props) {
+    if (props.toggle) {
+      return (
+        <div style={{backgroundColor: "red"}}>.</div>
+      );
+    } else {
+      return (
+        <div style={{backgroundColor: "blue"}}>.</div>
+      );
+    }
+}
+class Background extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {color: 0};
 
-// Form
+    this.change = this.change.bind(this);
 
+  }
+  change() {
+    this.setState({
+      color: !this.state.color
+    });
+  }
+  render() {
+    return (
+      <div>
+        <button onClick={this.change}>Zmień Kolor!</button>
+        <Toggle toggle={this.state.color} />
+      </div>
+    );
+  }
+}
+
+// Form DOPRACOWAC!
+function SwitchBox (props) {
+  if (props.box) {
+    return (
+      <span>True</span>
+    );
+  } else {
+    return (
+      <span>False</span>
+    );
+  };
+}
+function View (props) {
+  return (
+    <span>{props.view}</span>
+  );
+}
+class Form extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+    this.update = this.update.bind(this);
+  }
+  update(e) {
+    debugger;
+    const target = e.target;
+    const name = target.name;
+    const value = target.type === "checkbox"? target.checked : target.value;
+
+    this.setState({
+      [name] : value
+    });
+  }
+  render() {
+    return (
+      <div>
+        <p>Wypelnij formularz</p>
+        <form onSubmit={this.update}>
+          Login: <input type="text" name="login" onChange={this.update}/>
+          <br />
+          Haslo: <input type="password" name="password" onChange={this.update} />
+          <br />
+          E-mail: <input type="email" name="email" onChange={this.update} />
+          <input type="checkbox" name="checkbox" onChange={this.update} checked={this.state.checkbox} />
+          <br />
+          <textarea name="textarea" onChange={this.update} />
+          <select name="select" onChange={this.update}>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+          </select>
+          <br />
+          <input type="submit"/>
+        </form>
+        <p>Twoje dane!</p>
+        Login: <View view={this.state.login} />
+        <br />
+        Haslo: <View view={this.state.password} />
+        <br />
+        E-mail: <View view={this.state.email} />
+        <br />
+        Przycisk: <SwitchBox box={this.state.checkbox} />
+        <br />
+        Pole tekstowe: <View view={this.state.textarea} />
+        <br />
+        Lista: <View view={this.state.select} />
+      </div>
+    );
+  }
+}
 
 // Wyswietlanie
 function Body() {
@@ -108,6 +212,9 @@ function Body() {
       <Button />
       <List />
       <hr />
+      <Background />
+      <hr />
+      <Form />
     </div>
   );
 }
