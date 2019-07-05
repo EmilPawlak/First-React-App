@@ -125,7 +125,7 @@ class Background extends React.Component {
   }
 }
 
-// Form DOPRACOWAC!
+// Form
 function SwitchBox (props) {
   if (props.box) {
     return (
