@@ -164,7 +164,7 @@ class Form extends React.Component {
     return (
       <div>
         <p>Wypelnij formularz</p>
-        <form onSubmit={this.update}>
+        <form>
           Login: <input type="text" name="login" onChange={this.update}/>
           <br />
           Haslo: <input type="password" name="password" onChange={this.update} />
@@ -178,8 +178,6 @@ class Form extends React.Component {
             <option>2</option>
             <option>3</option>
           </select>
-          <br />
-          <input type="submit"/>
         </form>
         <p>Twoje dane!</p>
         Login: <View view={this.state.login} />
@@ -193,6 +191,81 @@ class Form extends React.Component {
         Pole tekstowe: <View view={this.state.textarea} />
         <br />
         Lista: <View view={this.state.select} />
+      </div>
+    );
+  }
+}
+
+// Lifting State Up
+// PLN, Euro, Dolar, Funt
+const currencyNames = {
+  p: "PLN",
+  e: "EUR"
+};
+function toPLN(value) {
+  return value;
+}
+function toEUR(value) {
+  return value * 4.25;
+}
+function Convert(currency, convert) {
+  const input = parseFloat(currency);
+  if (Number.isNan(input)) {
+    return '';
+  }
+  const output = convert(input);
+  return output;
+}
+class Bank extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {money: '', currencyName : "PLN"}
+
+    this.handlePLNChange = this.handlePLNChange.bind(this);
+    this.handleEURChange = this.handleEURChange.bind(this);
+  }
+  handlePLNChange(currency) {
+    this.setState({
+      currency,
+      currencyName: "PLN"
+    })
+  }
+  handleEURChange(currency) {
+    this.setState({
+      currency,
+      currencyName: "EUR"
+    })
+  }
+  render() {
+    const currency = this.state.money;
+    const currencyName = this.state.currencyName;
+    const pln = currencyName === "p" ? Convert(currency, toPLN) : currency;
+    const eur = currencyName === "e" ? Convert(currency, toEUR) : currency;
+    return (
+      <div>
+        <p>Przelicznik walut</p>
+        <Count currencyName="p" currency={pln} onCurrencyChange={this.handlePLNChange} />
+        <Count currencyName="e" currency={eur} onCurrencyChange={this.handleEURChange} />
+      </div>
+    );
+  };
+}
+class Count extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(e) {
+    this.props.onCurrencyChange(e.target.value)
+  }
+  render() {
+    const currency = this.props.currency;
+    const currencyName = this.props.currencyName;
+    return (
+      <div>
+        <span>{currencyNames[currencyName]}</span>
+        <input value={currency} onChange={this.handleChange}/>
+        <br />
       </div>
     );
   }
@@ -215,6 +288,8 @@ function Body() {
       <Background />
       <hr />
       <Form />
+      <hr />
+      <Bank />
     </div>
   );
 }
