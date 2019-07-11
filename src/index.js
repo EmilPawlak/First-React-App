@@ -197,29 +197,48 @@ class Form extends React.Component {
 }
 
 // Lifting State Up
-// PLN, Euro, Dolar, Funt
 const currencyNames = {
   p: "PLN",
   e: "EUR"
 };
 function toPLN(value) {
-  return value;
+  return value / 4.25;
 }
 function toEUR(value) {
   return value * 4.25;
 }
-function Convert(currency, convert) {
+function convert(currency, convert) {
   const input = parseFloat(currency);
-  if (Number.isNan(input)) {
-    return '';
+  if (Number.isNaN(input)) {
+    return "";
   }
   const output = convert(input);
-  return output;
+  return output.toFixed(2);
+}
+class Count extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(e) {
+    this.props.onCurrencyChange(e.target.value);
+  }
+  render() {
+    const currency = this.props.currency;
+    const currencyName = this.props.currencyName;
+    return (
+      <div>
+        <span>{currencyNames[currencyName]}: </span>
+        <input value={currency} onChange={this.handleChange}/>
+        <br />
+      </div>
+    );
+  }
 }
 class Bank extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {money: '', currencyName : "PLN"}
+    this.state = {currency: "", currencyName : "PLN"}
 
     this.handlePLNChange = this.handlePLNChange.bind(this);
     this.handleEURChange = this.handleEURChange.bind(this);
@@ -237,10 +256,11 @@ class Bank extends React.Component {
     })
   }
   render() {
-    const currency = this.state.money;
+    const currency = this.state.currency;
     const currencyName = this.state.currencyName;
-    const pln = currencyName === "p" ? Convert(currency, toPLN) : currency;
-    const eur = currencyName === "e" ? Convert(currency, toEUR) : currency;
+    debugger;
+    const pln = currencyName === "EUR" ? convert(currency, toPLN) : currency;
+    const eur = currencyName === "PLN" ? convert(currency, toEUR) : currency;
     return (
       <div>
         <p>Przelicznik walut</p>
@@ -250,26 +270,9 @@ class Bank extends React.Component {
     );
   };
 }
-class Count extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
-  handleChange(e) {
-    this.props.onCurrencyChange(e.target.value)
-  }
-  render() {
-    const currency = this.props.currency;
-    const currencyName = this.props.currencyName;
-    return (
-      <div>
-        <span>{currencyNames[currencyName]}</span>
-        <input value={currency} onChange={this.handleChange}/>
-        <br />
-      </div>
-    );
-  }
-}
+
+// Composition
+
 
 // Wyswietlanie
 function Body() {
